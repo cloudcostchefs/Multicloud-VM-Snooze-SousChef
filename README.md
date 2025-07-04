@@ -1,9 +1,10 @@
 # 🛑 Multicloud VM Snooze SousChef
 
-> **Professional multicloud toolkit for discovering and analyzing stopped/deallocated compute instances across Azure, GCP, and OCI. Comprehensive PowerShell and Python scripts with enterprise-grade reporting for resource optimization.**
+> **Professional multicloud toolkit for discovering and analyzing stopped/deallocated compute instances across AWS, Azure, GCP, and OCI. Comprehensive PowerShell and Python scripts with enterprise-grade reporting for resource optimization.**
 
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)](https://docs.microsoft.com/en-us/powershell/)
 [![Python](https://img.shields.io/badge/Python-3.6%2B-green.svg)](https://www.python.org/)
+[![AWS](https://img.shields.io/badge/AWS-EC2-ff9900.svg)](https://aws.amazon.com/ec2/)
 [![Azure](https://img.shields.io/badge/Azure-Compute-0078d4.svg)](https://azure.microsoft.com/en-us/services/virtual-machines/)
 [![GCP](https://img.shields.io/badge/GCP-Compute%20Engine-4285f4.svg)](https://cloud.google.com/compute)
 [![OCI](https://img.shields.io/badge/OCI-Compute-f80000.svg)](https://www.oracle.com/cloud/compute/)
@@ -14,8 +15,9 @@
 
 The **Multicloud VM Snooze SousChef** is a comprehensive toolkit designed to help organizations identify and analyze stopped, deallocated, or terminated compute instances across their entire multicloud infrastructure. Like a skilled sous chef organizing ingredients in a professional kitchen, these tools help you maintain clean, cost-effective cloud environments by providing detailed visibility into your instance lifecycle across all major cloud providers.
 
-This repository contains three specialized scripts, each optimized for their respective cloud platforms:
+This repository contains four specialized scripts, each optimized for their respective cloud platforms:
 
+- **🟠 AWS Stopped Instances Lister** - PowerShell script for AWS stopped EC2 instances
 - **🔵 Azure VM Deallocation Detective** - PowerShell script for Azure deallocated VMs
 - **🟢 GCP Stopped Instances Lister** - PowerShell script for GCP terminated instances  
 - **🔴 OCI Stopped Instances Detective** - Python script for OCI stopped instances
@@ -24,9 +26,9 @@ This repository contains three specialized scripts, each optimized for their res
 
 - **💰 Cost Optimization**: Identify stopped instances that may no longer be needed, reducing unnecessary storage costs
 - **📊 Comprehensive Reporting**: Generate both CSV and HTML reports for technical analysis and executive presentation
-- **⚡ High Performance**: Parallel processing across subscriptions, projects, and compartments
+- **⚡ High Performance**: Parallel processing across accounts, subscriptions, projects, and compartments
 - **🔍 Deep Analysis**: Age-based filtering, owner detection, and detailed instance metadata
-- **🌍 Multicloud Support**: Unified approach across Azure, GCP, and OCI platforms
+- **🌍 Multicloud Support**: Unified approach across AWS, Azure, GCP, and OCI platforms
 - **🎨 Executive Dashboards**: Rich HTML reports with visual analytics and priority levels
 
 ## 🚀 Quick Start
@@ -35,6 +37,7 @@ This repository contains three specialized scripts, each optimized for their res
 
 | Cloud Provider | Script | Language | Use Case |
 |----------------|--------|----------|----------|
+| **AWS** | `AWS-StoppedInstances.ps1` | PowerShell | Stopped EC2 instances with AWS CLI integration |
 | **Azure** | `Azure-VM-Deallocation-Detective.ps1` | PowerShell | Deallocated VMs with KQL-powered discovery |
 | **GCP** | `GCP-StoppedInstances.ps1` | PowerShell | Terminated instances with gcloud CLI integration |
 | **OCI** | `OCI-StoppedInstances.py` | Python | Stopped instances with OCI SDK |
@@ -44,9 +47,61 @@ This repository contains three specialized scripts, each optimized for their res
 1. **Administrative Access** to your cloud environment
 2. **Appropriate CLI Tools** installed and configured
 3. **Proper IAM Permissions** for compute resource access
-4. **PowerShell 5.1+** (for Azure/GCP scripts) or **Python 3.6+** (for OCI script)
+4. **PowerShell 5.1+** (for AWS/Azure/GCP scripts) or **Python 3.6+** (for OCI script)
 
 ## 📋 Platform-Specific Guides
+
+---
+
+## 🟠 AWS Stopped Instances Lister
+
+### Overview
+Professional PowerShell script that discovers stopped AWS EC2 instances using native AWS CLI integration with parallel processing across regions and accounts.
+
+### Prerequisites
+- **PowerShell 5.1+** with parallel job support
+- **AWS CLI v2** installed and configured
+- **Valid AWS credentials** configured via AWS CLI, environment variables, or IAM roles
+- **EC2 read permissions** (ec2:DescribeInstances, ec2:DescribeRegions) across target regions
+
+### Quick Start
+```powershell
+# Basic scan across all accessible regions
+.\AWS-StoppedInstances.ps1
+
+# Filter instances older than 30 days
+.\AWS-StoppedInstances.ps1 -MinDays 30
+
+# Scan specific regions only
+.\AWS-StoppedInstances.ps1 -Regions "us-east-1,us-west-2"
+
+# Use specific AWS profile
+.\AWS-StoppedInstances.ps1 -Profile "production" -IncludeTerminated
+
+# Adjust performance settings
+.\AWS-StoppedInstances.ps1 -MaxConcurrent 15 -OutputPath "./reports"
+```
+
+### Key Features
+- **🖥️ Native AWS CLI Integration**: Authenticated access and reliable data retrieval across accounts
+- **🌍 Multi-Region Discovery**: Automatic region discovery or targeted regional analysis
+- **🛡️ Profile Management**: Support for multiple AWS profiles with authentication verification
+- **⚡ Parallel Processing**: High-performance scanning with configurable concurrency limits
+- **🖥️ Instance State Analysis**: Comprehensive analysis of stopped and optionally terminated instances
+- **👤 Owner Detection**: Extracts owner information from EC2 tags for accountability
+- **📅 Age Analysis**: Intelligent filtering with configurable age-based lifecycle decisions
+- **📊 Dual Report Formats**: CSV for analysis and HTML for executive presentation
+
+### Parameters
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `Regions` | String | `""` | Comma-separated list of AWS regions to scan |
+| `MinDays` | Integer | `0` | Minimum days since launch to include instances |
+| `OutputPath` | String | `"."` | Output directory for reports |
+| `MaxConcurrent` | Integer | `10` | Maximum number of concurrent operations |
+| `SkipRegions` | String | `""` | Comma-separated list of regions to skip |
+| `Profile` | String | `""` | AWS CLI profile to use |
+| `IncludeTerminated` | Switch | `False` | Include terminated instances in addition to stopped ones |
 
 ---
 
@@ -247,6 +302,11 @@ All scripts generate two types of comprehensive reports:
 
 ## 🔐 Security & Permissions
 
+### AWS Requirements
+- **EC2 read permissions** (`ec2:DescribeInstances`, `ec2:DescribeRegions`)
+- **Valid AWS credentials** via AWS CLI, environment variables, or IAM roles
+- Active AWS CLI authentication (`aws configure` or `aws sso login`)
+
 ### Azure Requirements
 - **Reader** role on target subscriptions
 - **Resource Graph Reader** role for KQL queries
@@ -274,6 +334,11 @@ All scripts generate two types of comprehensive reports:
 ### Owner Detection Logic
 Each script includes customizable owner detection patterns:
 
+**AWS**: Tag-based owner extraction
+```powershell
+# Priority order: Owner, CreatedBy, Contact, Team tags
+```
+
 **Azure**: IDSApplicationOwner-Symphony tag priority with fallback patterns
 ```powershell
 # Priority order: IDSApplicationOwner-Symphony, Owner, CreatedBy, Contact
@@ -291,11 +356,11 @@ Each script includes customizable owner detection patterns:
 
 ### Performance Tuning Guidelines
 
-| Environment Size | Azure | GCP | OCI |
-|------------------|-------|-----|-----|
-| **Small** (1-10 subscriptions/projects) | Default | MaxConcurrent: 5-10 | MaxWorkers: 10-15 |
-| **Medium** (10-50 subscriptions/projects) | FastMode | MaxConcurrent: 10-15 | MaxWorkers: 15-20 |
-| **Large** (50+ subscriptions/projects) | FastMode + Filtering | MaxConcurrent: 5-10 | MaxWorkers: 10-15 |
+| Environment Size | AWS | Azure | GCP | OCI |
+|------------------|-----|-------|-----|-----|
+| **Small** (1-10 accounts/subscriptions/projects) | MaxConcurrent: 5-10 | Default | MaxConcurrent: 5-10 | MaxWorkers: 10-15 |
+| **Medium** (10-50 accounts/subscriptions/projects) | MaxConcurrent: 10-15 | FastMode | MaxConcurrent: 10-15 | MaxWorkers: 15-20 |
+| **Large** (50+ accounts/subscriptions/projects) | MaxConcurrent: 5-10 | FastMode + Filtering | MaxConcurrent: 5-10 | MaxWorkers: 10-15 |
 
 ## 🚨 Troubleshooting
 
@@ -318,11 +383,21 @@ Each script includes customizable owner detection patterns:
 #### Large Dataset Performance
 **Symptoms**: Slow execution, memory issues
 **Solutions**:
-- Use resource filtering (subscriptions, projects, compartments)
+- Use resource filtering (accounts, subscriptions, projects, compartments)
 - Increase concurrency gradually
 - Process in smaller batches
 
 ### Platform-Specific Troubleshooting
+
+#### AWS
+```powershell
+# Check AWS CLI configuration
+aws configure list
+aws sts get-caller-identity
+
+# Test EC2 access
+aws ec2 describe-instances --max-items 1
+```
 
 #### Azure
 ```powershell
@@ -358,6 +433,7 @@ oci compute instance list --compartment-id <root-compartment-id> --limit 1
 
 | Platform | Small Environment | Medium Environment | Large Environment |
 |----------|-------------------|-------------------|-------------------|
+| **AWS** | 25-50 seconds | 2-4 minutes | 5-12 minutes |
 | **Azure** | 30-60 seconds | 2-5 minutes | 5-15 minutes |
 | **GCP** | 45-90 seconds | 3-7 minutes | 8-20 minutes |
 | **OCI** | 20-45 seconds | 1-4 minutes | 4-12 minutes |
@@ -365,7 +441,7 @@ oci compute instance list --compartment-id <root-compartment-id> --limit 1
 **Processing Speed**: 50-200 instances/second (depending on platform and concurrency)
 
 ### Optimization Strategies
-1. **Resource Filtering**: Target specific subscriptions/projects/compartments
+1. **Resource Filtering**: Target specific accounts/subscriptions/projects/compartments
 2. **Regional Filtering**: Focus on specific regions for faster results
 3. **Concurrent Processing**: Adjust based on environment size and API limits
 4. **Network Proximity**: Run from same region as cloud resources when possible
@@ -391,7 +467,7 @@ We welcome contributions to improve the Multicloud VM Snooze SousChef! Here's ho
 - Maintain consistent CloudCostChefs branding
 
 ### Areas for Contribution
-- Additional cloud provider support (AWS, Alibaba Cloud)
+- Additional cloud provider support (Alibaba Cloud, IBM Cloud)
 - Enhanced reporting features and visualizations
 - Performance optimizations and caching
 - Additional filtering and analysis options
@@ -404,6 +480,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
+- **Amazon Web Services** for comprehensive AWS CLI and robust EC2 APIs
 - **Microsoft Azure** for comprehensive PowerShell integration and Resource Graph
 - **Google Cloud Platform** for excellent gcloud CLI and APIs
 - **Oracle Cloud Infrastructure** for robust Python SDK and documentation
@@ -411,6 +488,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - **Python Community** for concurrent programming libraries
 - **CloudCostChefs Community** for feedback and feature requests
 - **Contributors** who help improve these tools
+
 
 **Made with ❤️ by the CloudCostChefs team**
 
