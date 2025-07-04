@@ -1,58 +1,114 @@
 # 🛑 Multicloud VM Snooze SousChef
 
-> **Professional PowerShell script that discovers and analyzes stopped compute instances across Google Cloud Platform projects. Fast gcloud CLI integration with comprehensive CSV + HTML reporting for resource optimization.**
+> **Professional multicloud toolkit for discovering and analyzing stopped/deallocated compute instances across Azure, GCP, and OCI. Comprehensive PowerShell and Python scripts with enterprise-grade reporting for resource optimization.**
 
 [![PowerShell](https://img.shields.io/badge/PowerShell-5.1%2B-blue.svg)](https://docs.microsoft.com/en-us/powershell/)
+[![Python](https://img.shields.io/badge/Python-3.6%2B-green.svg)](https://www.python.org/)
+[![Azure](https://img.shields.io/badge/Azure-Compute-0078d4.svg)](https://azure.microsoft.com/en-us/services/virtual-machines/)
 [![GCP](https://img.shields.io/badge/GCP-Compute%20Engine-4285f4.svg)](https://cloud.google.com/compute)
+[![OCI](https://img.shields.io/badge/OCI-Compute-f80000.svg)](https://www.oracle.com/cloud/compute/)
 [![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![CloudCostChefs](https://img.shields.io/badge/CloudCostChefs-VM%20Snooze%20SousChef-orange.svg)](https://cloudcostchefs.com)
 
 ## 🎯 Overview
 
-The **Multicloud VM Snooze SousChef** is a comprehensive PowerShell script designed to help organizations identify and analyze stopped (TERMINATED) compute instances across their Google Cloud Platform infrastructure. Like a skilled sous chef organizing ingredients in a professional kitchen, this tool helps you maintain a clean, cost-effective cloud environment by providing detailed visibility into your instance lifecycle.
+The **Multicloud VM Snooze SousChef** is a comprehensive toolkit designed to help organizations identify and analyze stopped, deallocated, or terminated compute instances across their entire multicloud infrastructure. Like a skilled sous chef organizing ingredients in a professional kitchen, these tools help you maintain clean, cost-effective cloud environments by providing detailed visibility into your instance lifecycle across all major cloud providers.
 
-### Key Benefits
+This repository contains three specialized scripts, each optimized for their respective cloud platforms:
+
+- **🔵 Azure VM Deallocation Detective** - PowerShell script for Azure deallocated VMs
+- **🟢 GCP Stopped Instances Lister** - PowerShell script for GCP terminated instances  
+- **🔴 OCI Stopped Instances Detective** - Python script for OCI stopped instances
+
+### 🌟 Key Benefits
 
 - **💰 Cost Optimization**: Identify stopped instances that may no longer be needed, reducing unnecessary storage costs
 - **📊 Comprehensive Reporting**: Generate both CSV and HTML reports for technical analysis and executive presentation
-- **⚡ High Performance**: Parallel processing across projects and zones with configurable concurrency
+- **⚡ High Performance**: Parallel processing across subscriptions, projects, and compartments
 - **🔍 Deep Analysis**: Age-based filtering, owner detection, and detailed instance metadata
-- **🌍 Multi-Project Support**: Scan across your entire GCP organization or target specific projects
+- **🌍 Multicloud Support**: Unified approach across Azure, GCP, and OCI platforms
+- **🎨 Executive Dashboards**: Rich HTML reports with visual analytics and priority levels
 
 ## 🚀 Quick Start
 
+### Choose Your Cloud Platform
+
+| Cloud Provider | Script | Language | Use Case |
+|----------------|--------|----------|----------|
+| **Azure** | `Azure-VM-Deallocation-Detective.ps1` | PowerShell | Deallocated VMs with KQL-powered discovery |
+| **GCP** | `GCP-StoppedInstances.ps1` | PowerShell | Terminated instances with gcloud CLI integration |
+| **OCI** | `OCI-StoppedInstances.py` | Python | Stopped instances with OCI SDK |
+
+### Universal Prerequisites
+
+1. **Administrative Access** to your cloud environment
+2. **Appropriate CLI Tools** installed and configured
+3. **Proper IAM Permissions** for compute resource access
+4. **PowerShell 5.1+** (for Azure/GCP scripts) or **Python 3.6+** (for OCI script)
+
+## 📋 Platform-Specific Guides
+
+---
+
+## 🔵 Azure VM Deallocation Detective
+
+### Overview
+Professional PowerShell script that discovers deallocated Azure VMs using KQL-powered Azure Resource Graph queries with intelligent aging analysis and owner detection.
+
 ### Prerequisites
+- **PowerShell 5.1+** with Azure PowerShell modules
+- **Azure CLI** or **Azure PowerShell** authentication
+- **Reader** role on target subscriptions
+- **Resource Graph Reader** role for KQL queries
 
-Before running the script, ensure you have:
-
-1. **PowerShell 5.1 or later** installed
-2. **Google Cloud SDK** installed and configured
-3. **Active gcloud authentication** with appropriate permissions
-4. **Compute Engine Viewer** role or equivalent across target projects
-
-### Installation
-
-1. Clone this repository:
-```bash
-git clone https://github.com/cloudcostchefs/Multicloud-VM-Snooze-SousChef.git
-cd Multicloud-VM-Snooze-SousChef
-```
-
-2. Verify gcloud authentication:
-```bash
-gcloud auth list
-gcloud projects list
-```
-
-3. Run the script:
+### Quick Start
 ```powershell
-.\GCP-StoppedInstances.ps1
+# Basic scan across all accessible subscriptions
+.\Azure-VM-Deallocation-Detective.ps1
+
+# Filter VMs deallocated for 30+ days
+.\Azure-VM-Deallocation-Detective.ps1 -DaysThreshold 30
+
+# Fast mode for large environments
+.\Azure-VM-Deallocation-Detective.ps1 -FastMode
+
+# Target specific subscriptions
+.\Azure-VM-Deallocation-Detective.ps1 -SubscriptionIds "sub1,sub2,sub3"
 ```
 
-## 📋 Usage Examples
+### Key Features
+- **🔍 KQL-Powered Discovery**: Azure Resource Graph queries for fast, accurate VM identification
+- **📅 Intelligent Aging Analysis**: Activity Log tracking with smart estimates for historical VMs
+- **👤 Owner Detection**: IDSApplicationOwner-Symphony tag priority with fallback patterns
+- **📊 Dual Report Formats**: CSV for analysis and HTML for executive presentation
+- **⚡ Performance Modes**: Fast Mode for large environments or Detailed Mode for comprehensive analysis
+- **🔄 Multi-Subscription Support**: Parallel processing across entire Azure estate
+- **💾 Storage Analysis**: OS and data disk size calculations with VM size-based estimates
+- **🛡️ Enterprise Error Handling**: Comprehensive retry logic and graceful failure recovery
 
-### Basic Usage
+### Parameters
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `DaysThreshold` | Integer | `30` | Minimum days since deallocation to include VMs |
+| `SubscriptionIds` | String | `""` | Comma-separated subscription IDs to scan |
+| `FastMode` | Switch | `False` | Enable fast mode (skips detailed analysis) |
+| `OutputPath` | String | `"."` | Output directory for reports |
+| `MaxRetries` | Integer | `3` | Maximum retry attempts for failed operations |
 
+---
+
+## 🟢 GCP Stopped Instances Lister
+
+### Overview
+Professional PowerShell script that discovers stopped (TERMINATED) GCP compute instances using native gcloud CLI integration with parallel processing across projects and zones.
+
+### Prerequisites
+- **PowerShell 5.1+** with parallel job support
+- **Google Cloud SDK** (gcloud CLI) installed and configured
+- **Active gcloud authentication** with appropriate permissions
+- **Compute Engine Viewer** role across target projects
+
+### Quick Start
 ```powershell
 # Scan all accessible projects for stopped instances
 .\GCP-StoppedInstances.ps1
@@ -66,102 +122,111 @@ gcloud projects list
 # Target specific zones
 .\GCP-StoppedInstances.ps1 -Zones "us-central1-a,us-east1-b"
 
-# Skip problematic zones
-.\GCP-StoppedInstances.ps1 -SkipZones "europe-west1-a,asia-east1-c"
-
 # Adjust performance settings
 .\GCP-StoppedInstances.ps1 -MaxConcurrent 15 -OutputPath "./reports"
 ```
 
-### Advanced Scenarios
+### Key Features
+- **🖥️ Native gcloud CLI Integration**: Authenticated access and reliable data retrieval
+- **⚡ Parallel Processing**: High-performance scanning with configurable concurrency limits
+- **📁 Multi-Project Discovery**: Automatic project discovery or targeted analysis
+- **🌍 Zone Intelligence**: Smart zone discovery with filtering capabilities
+- **👤 Owner Detection**: Comprehensive label analysis for accountability
+- **📅 Age Analysis**: Intelligent filtering for lifecycle decisions
+- **📊 Dual Report Formats**: CSV for analysis and HTML for executive presentation
+- **📈 Performance Tracking**: Real-time progress monitoring and API statistics
 
-```powershell
-# Comprehensive audit of production projects
-.\GCP-StoppedInstances.ps1 -ProjectIds "prod-web,prod-api,prod-data" -MinDays 7 -OutputPath "C:\Reports\GCP"
-
-# Development environment cleanup analysis
-.\GCP-StoppedInstances.ps1 -ProjectIds "dev-sandbox,test-env" -MinDays 1
-
-# Regional analysis for cost optimization
-.\GCP-StoppedInstances.ps1 -Zones "us-central1-a,us-central1-b,us-central1-c" -MinDays 14
-```
-
-## 🛠️ Parameters
-
+### Parameters
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
 | `ProjectIds` | String | `""` | Comma-separated list of GCP project IDs to scan |
 | `Zones` | String | `""` | Comma-separated list of specific zones to scan |
 | `MinDays` | Integer | `0` | Minimum days since creation to include instances |
-| `OutputPath` | String | `"."` | Output directory for reports |
 | `MaxConcurrent` | Integer | `10` | Maximum number of concurrent operations |
 | `SkipZones` | String | `""` | Comma-separated list of zones to skip |
+| `OutputPath` | String | `"."` | Output directory for reports |
 
-## 📊 Report Outputs
+---
 
-The script generates two types of reports:
+## 🔴 OCI Stopped Instances Detective
 
-### CSV Report
+### Overview
+Professional Python script that discovers stopped OCI compute instances using the OCI SDK with high-performance parallel processing across regions and compartments.
+
+### Prerequisites
+- **Python 3.6+** with concurrent.futures and asyncio support
+- **OCI Python SDK** installed (`pip install oci`)
+- **Valid OCI config file** (~/.oci/config) with proper authentication
+- **IAM permissions** for read access to compute instances and compartments
+
+### Quick Start
+```bash
+# List all stopped instances across tenancy
+python stopped_instances.py
+
+# Filter instances stopped for 30+ days
+python stopped_instances.py --min-days 30
+
+# Scan specific compartments
+python stopped_instances.py --compartments "ocid1.comp.oc1..xxx,ocid1.comp.oc1..yyy"
+
+# Target specific regions
+python stopped_instances.py --regions "us-ashburn-1,us-phoenix-1"
+
+# Adjust performance settings
+python stopped_instances.py --max-workers 15 --profile PROD
+```
+
+### Key Features
+- **⚡ High-Performance Parallel Processing**: Configurable worker threads for optimal speed
+- **🌍 Multi-Region Discovery**: Automatic region discovery or targeted analysis
+- **🏢 Compartment Intelligence**: Smart compartment discovery with caching
+- **👤 Owner Detection**: Comprehensive tag analysis for both freeform and defined tags
+- **📅 Intelligent Age Calculation**: Timezone handling and configurable filtering
+- **📊 Dual Report Formats**: Structured CSV and rich HTML with visual analytics
+- **🛡️ Robust Error Handling**: Retry logic, timeout management, and graceful recovery
+- **📈 Performance Tracking**: Real-time monitoring with API call statistics
+
+### Parameters
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `--min-days` | Integer | `0` | Minimum days since creation to include instances |
+| `--compartments` | String | `None` | Comma-separated compartment OCIDs |
+| `--regions` | String | `None` | Comma-separated region names |
+| `--profile` | String | `DEFAULT` | OCI config profile to use |
+| `--max-workers` | Integer | `20` | Maximum parallel workers |
+| `--output-path` | String | `"."` | Output directory for reports |
+
+---
+
+## 📊 Report Formats
+
+All scripts generate two types of comprehensive reports:
+
+### CSV Reports
 - **Purpose**: Data analysis and integration with BI tools
 - **Format**: Structured CSV with all instance details
 - **Use Cases**: Filtering, sorting, pivot tables, automated processing
+- **Fields**: Instance name/ID, age, owner, region/zone, machine type, disk sizes, timestamps
 
-### HTML Report
+### HTML Reports
 - **Purpose**: Executive presentation and visual analysis
 - **Features**: 
   - Executive summary with key metrics
-  - Age distribution analysis with priority levels
-  - Project and region breakdowns
+  - Age distribution analysis with priority levels (🔴 Critical, 🟠 High, 🟡 Medium, 🟢 Low)
+  - Regional/project/compartment breakdowns
   - Top oldest instances highlighting
-  - Performance metrics and statistics
+  - Performance metrics and API statistics
+  - Interactive tables with hover effects
+  - Professional styling with cloud provider branding
 
-### Sample Report Data
-
-| Field | Description | Example |
-|-------|-------------|---------|
-| InstanceName | GCP instance name | `web-server-001` |
-| InstanceId | Unique instance identifier | `1234567890123456789` |
-| ProjectId | GCP project ID | `my-production-project` |
-| Zone | GCP zone location | `us-central1-a` |
-| Region | GCP region | `us-central1` |
-| MachineType | Instance machine type | `n1-standard-2` |
-| DaysSinceCreated | Age in days | `45` |
-| Owner | Extracted from labels | `john.doe@company.com` |
-| TotalDiskSizeGB | Total disk space | `100` |
-| LastStoppedDate | When instance was stopped | `2024-01-15 14:30:22` |
-
-## 🔧 Technical Architecture
-
-### Discovery Engine
-The script employs a sophisticated discovery mechanism that:
-
-- **Authenticates** via gcloud CLI for secure access
-- **Discovers** all accessible projects automatically or uses specified projects
-- **Enumerates** zones within each project, filtering out unavailable zones
-- **Queries** compute instances with `status:TERMINATED` filter for efficiency
-- **Processes** results in parallel using PowerShell jobs for optimal performance
-
-### Data Processing Pipeline
-1. **Instance Retrieval**: Parallel gcloud API calls across projects/zones
-2. **Data Transformation**: Convert GCP JSON responses to standardized objects
-3. **Enrichment**: Add calculated fields (age, owner, disk totals)
-4. **Filtering**: Apply age-based and other criteria
-5. **Aggregation**: Generate statistics and breakdowns
-6. **Export**: Create CSV and HTML reports
-
-### Performance Optimization
-- **Parallel Execution**: Configurable concurrent job limits
-- **Efficient Filtering**: Server-side filtering via gcloud CLI
-- **Memory Management**: Streaming data processing to handle large datasets
-- **Error Handling**: Comprehensive retry logic and graceful failure recovery
-
-## 🏗️ Architecture Diagram
+## 🏗️ Architecture Overview
 
 ```
 ┌─────────────────┐    ┌──────────────────┐    ┌─────────────────┐
-│   PowerShell    │    │   gcloud CLI     │    │   GCP APIs      │
-│   Script        │───▶│   Integration    │───▶│   Compute       │
-│                 │    │                  │    │   Engine        │
+│   PowerShell/   │    │   Cloud CLI/SDK  │    │   Cloud APIs    │
+│   Python        │───▶│   Integration    │───▶│   (Compute)     │
+│   Scripts       │    │                  │    │                 │
 └─────────────────┘    └──────────────────┘    └─────────────────┘
          │                       │                       │
          ▼                       ▼                       ▼
@@ -182,128 +247,128 @@ The script employs a sophisticated discovery mechanism that:
 
 ## 🔐 Security & Permissions
 
-### Required IAM Permissions
-The script requires the following permissions across target projects:
+### Azure Requirements
+- **Reader** role on target subscriptions
+- **Resource Graph Reader** role for KQL queries
+- Azure PowerShell modules or Azure CLI authentication
 
-- `compute.instances.list` - List compute instances
-- `compute.zones.list` - List available zones
-- `compute.projects.get` - Access project information
+### GCP Requirements
+- **Compute Engine Viewer** role (`roles/compute.viewer`)
+- **Project Viewer** role (`roles/viewer`) for broader access
+- Active gcloud authentication (`gcloud auth login`)
 
-### Recommended IAM Roles
-- **Compute Engine Viewer** (`roles/compute.viewer`)
-- **Project Viewer** (`roles/viewer`) - for broader access
+### OCI Requirements
+- **Compute Instance Inspector** or equivalent permissions
+- Valid OCI config file with proper authentication
+- Read access to compute instances and compartments
 
 ### Security Best Practices
 1. **Principle of Least Privilege**: Grant only necessary permissions
 2. **Service Account Usage**: Consider using service accounts for automation
-3. **Audit Logging**: Enable Cloud Audit Logs for compliance
+3. **Audit Logging**: Enable cloud audit logs for compliance
 4. **Network Security**: Run from trusted networks or secure environments
+5. **Credential Management**: Use secure credential storage and rotation
 
 ## 🎨 Customization
 
 ### Owner Detection Logic
-The script extracts owner information from GCP labels using the following priority:
+Each script includes customizable owner detection patterns:
 
-1. `owner` label
-2. `created-by` label  
-3. `contact` label
-4. `team` label
-
-To customize owner detection, modify the `Convert-GcpInstance` function:
-
+**Azure**: IDSApplicationOwner-Symphony tag priority with fallback patterns
 ```powershell
-# Custom owner detection logic
-$owner = "Unknown"
-if ($Instance.labels) {
-    foreach ($label in $Instance.labels.PSObject.Properties) {
-        if ($label.Name -match "your-custom-pattern") {
-            $owner = $label.Value
-            break
-        }
-    }
-}
+# Priority order: IDSApplicationOwner-Symphony, Owner, CreatedBy, Contact
 ```
 
-### Report Customization
-Modify the HTML report template in the `Export-HtmlReport` function to:
-- Add custom branding
-- Include additional metrics
-- Modify visual styling
-- Add custom analysis sections
-
-### Performance Tuning
-Adjust performance parameters based on your environment:
-
+**GCP**: Label-based owner extraction
 ```powershell
-# For large organizations (100+ projects)
-.\GCP-StoppedInstances.ps1 -MaxConcurrent 5
-
-# For smaller environments (fast processing)
-.\GCP-StoppedInstances.ps1 -MaxConcurrent 20
-
-# For rate-limited environments
-.\GCP-StoppedInstances.ps1 -MaxConcurrent 3
+# Priority order: owner, created-by, contact, team labels
 ```
+
+**OCI**: Tag-based owner detection
+```python
+# Priority order: Owner, CreatedBy, Contact, ApplicationOwner tags
+```
+
+### Performance Tuning Guidelines
+
+| Environment Size | Azure | GCP | OCI |
+|------------------|-------|-----|-----|
+| **Small** (1-10 subscriptions/projects) | Default | MaxConcurrent: 5-10 | MaxWorkers: 10-15 |
+| **Medium** (10-50 subscriptions/projects) | FastMode | MaxConcurrent: 10-15 | MaxWorkers: 15-20 |
+| **Large** (50+ subscriptions/projects) | FastMode + Filtering | MaxConcurrent: 5-10 | MaxWorkers: 10-15 |
 
 ## 🚨 Troubleshooting
 
-### Common Issues
+### Common Issues Across All Platforms
 
 #### Authentication Errors
-```
-❌ No active gcloud authentication found.
-```
-**Solution**: Run `gcloud auth login` and verify with `gcloud auth list`
-
-#### Permission Denied
-```
-❌ Failed to get instances in project/zone: Permission denied
-```
-**Solution**: Verify IAM permissions and project access with `gcloud projects list`
+**Symptoms**: Permission denied, authentication failed
+**Solutions**: 
+- Verify CLI authentication status
+- Check IAM permissions and role assignments
+- Ensure proper credential configuration
 
 #### Rate Limiting
-```
-⚠️ Timeout in region/project, retrying...
-```
-**Solution**: Reduce `MaxConcurrent` parameter or add delays
+**Symptoms**: Timeout errors, API throttling
+**Solutions**:
+- Reduce concurrency parameters
+- Implement delays between requests
+- Use filtering to reduce API calls
 
 #### Large Dataset Performance
-```
-Script running slowly with many projects
-```
-**Solution**: 
-- Use project filtering (`-ProjectIds`)
-- Increase `MaxConcurrent` gradually
-- Use zone filtering for targeted analysis
+**Symptoms**: Slow execution, memory issues
+**Solutions**:
+- Use resource filtering (subscriptions, projects, compartments)
+- Increase concurrency gradually
+- Process in smaller batches
 
-### Debug Mode
-Enable verbose output for troubleshooting:
+### Platform-Specific Troubleshooting
 
+#### Azure
 ```powershell
-$VerbosePreference = "Continue"
-.\GCP-StoppedInstances.ps1 -Verbose
+# Check Azure PowerShell connection
+Get-AzContext
+
+# Verify Resource Graph access
+Get-AzResourceGraphQuery -Query "Resources | limit 1"
 ```
 
-### Log Analysis
-The script provides real-time progress logging:
-- ⚡ Progress updates with timing
-- ✅ Success confirmations
-- ⚠️ Warning messages for non-critical issues
-- ❌ Error messages for failures
+#### GCP
+```bash
+# Verify gcloud authentication
+gcloud auth list
+gcloud projects list
+
+# Test compute access
+gcloud compute instances list --limit=1
+```
+
+#### OCI
+```bash
+# Test OCI configuration
+oci iam user get --user-id $(oci iam user list --query 'data[0].id' --raw-output)
+
+# Verify compute access
+oci compute instance list --compartment-id <root-compartment-id> --limit 1
+```
 
 ## 📈 Performance Benchmarks
 
 ### Typical Performance Metrics
-- **Small Environment** (1-5 projects): 30-60 seconds
-- **Medium Environment** (10-25 projects): 2-5 minutes  
-- **Large Environment** (50+ projects): 5-15 minutes
-- **Processing Speed**: 50-200 instances/second (depending on concurrency)
 
-### Optimization Tips
-1. **Use Project Filtering**: Target specific projects to reduce scope
-2. **Zone Filtering**: Focus on specific regions for faster results
-3. **Concurrent Jobs**: Start with 10, adjust based on performance
-4. **Network Location**: Run from same region as GCP resources when possible
+| Platform | Small Environment | Medium Environment | Large Environment |
+|----------|-------------------|-------------------|-------------------|
+| **Azure** | 30-60 seconds | 2-5 minutes | 5-15 minutes |
+| **GCP** | 45-90 seconds | 3-7 minutes | 8-20 minutes |
+| **OCI** | 20-45 seconds | 1-4 minutes | 4-12 minutes |
+
+**Processing Speed**: 50-200 instances/second (depending on platform and concurrency)
+
+### Optimization Strategies
+1. **Resource Filtering**: Target specific subscriptions/projects/compartments
+2. **Regional Filtering**: Focus on specific regions for faster results
+3. **Concurrent Processing**: Adjust based on environment size and API limits
+4. **Network Proximity**: Run from same region as cloud resources when possible
 
 ## 🤝 Contributing
 
@@ -312,24 +377,26 @@ We welcome contributions to improve the Multicloud VM Snooze SousChef! Here's ho
 ### Development Setup
 1. Fork the repository
 2. Create a feature branch: `git checkout -b feature/amazing-feature`
-3. Make your changes and test thoroughly
+3. Make your changes and test thoroughly across platforms
 4. Commit your changes: `git commit -m 'Add amazing feature'`
 5. Push to the branch: `git push origin feature/amazing-feature`
 6. Open a Pull Request
 
 ### Contribution Guidelines
-- Follow PowerShell best practices and style guidelines
+- Follow language-specific best practices (PowerShell/Python)
 - Include comprehensive error handling
 - Add appropriate comments and documentation
-- Test with multiple GCP environments
+- Test with multiple cloud environments
 - Update README.md for new features
+- Maintain consistent CloudCostChefs branding
 
 ### Areas for Contribution
-- Additional cloud provider support (AWS, Azure)
-- Enhanced reporting features
-- Performance optimizations
-- Additional filtering options
-- Integration with other tools
+- Additional cloud provider support (AWS, Alibaba Cloud)
+- Enhanced reporting features and visualizations
+- Performance optimizations and caching
+- Additional filtering and analysis options
+- Integration with ITSM tools (ServiceNow, Jira)
+- Automated remediation capabilities
 
 ## 📄 License
 
@@ -337,23 +404,15 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- **Google Cloud Platform** for providing comprehensive APIs
-- **PowerShell Community** for excellent parallel processing capabilities
+- **Microsoft Azure** for comprehensive PowerShell integration and Resource Graph
+- **Google Cloud Platform** for excellent gcloud CLI and APIs
+- **Oracle Cloud Infrastructure** for robust Python SDK and documentation
+- **PowerShell Community** for parallel processing capabilities
+- **Python Community** for concurrent programming libraries
 - **CloudCostChefs Community** for feedback and feature requests
-- **Contributors** who help improve this tool
-
-## 📞 Support
-
-### Documentation
-- [CloudCostChefs Tools](https://cloudcostchefs.com/tools/gcp-stopped-instances-lister)
-- [GCP Optimization Guide](https://cloudcostchefs.com/learn/cloud-optimization-gcp)
-
-### Professional Support
-For enterprise support, custom development, or consulting services, contact us at [support@cloudcostchefs.com](mailto:support@cloudcostchefs.com).
-
----
+- **Contributors** who help improve these tools
 
 **Made with ❤️ by the CloudCostChefs team**
 
-*Helping organizations optimize their cloud costs, one instance at a time.*
+*Helping organizations optimize their multicloud costs, one instance at a time.*
 
